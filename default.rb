@@ -3,6 +3,7 @@
 gem 'annotate'
 gem 'coffee-script-source', version: '1.8.0'
 gem 'font-awesome-sass'
+gem 'font-awesome-rails'
 
 gem_group :development, :test do
   gem 'pry-rails'
@@ -19,21 +20,15 @@ if yes?('Would you like install "bootstrap"? (y or n):')
     puts '    Please run "rails g bootstrap:install less" after "bundle install".'
     puts '  -----------------------------------------------------------------------'
   end
-elsif yes?('Would you like install "honoka-rails"? (y or n):')
-  gem 'honoka-rails', version: '>= 3.3.6.3'
-  
-  run('mv app/assets/stylesheets/application.css app/assets/stylesheets/application.scss')
-  append_file 'app/assets/stylesheets/application.scss', <<-APP_SCSS
-@import "bootstrap-sprockets";
-@import "honoka";
-@import "font-awesome-sprockets";
-@import "font-awesome";
-  APP_SCSS
-  
-  inject_into_file 'app/assets/javascripts/application.js', before: '//= require_tree .' do
-    <<-APP_JS
-//= require bootstrap-sprockets
-    APP_JS
+  if yes?('Would you like install "honoka-rails"? (y or n):')
+    gem 'honoka-rails', version: '>= 3.3.6.3'
+    
+    after_bundle do
+      puts '  -----------------------------------------------------------------------'
+      puts '    Please rename "application.css" to "application.css.scss",'
+      puts '    and add "@import "honoka";" to "application.css.scss".'
+      puts '  -----------------------------------------------------------------------'
+    end
   end
 end
 
